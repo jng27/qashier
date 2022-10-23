@@ -1,0 +1,18 @@
+#carpark-label{
+    font-size: 24px;
+    font-weight: 700;
+}
+
+#size-wrapper{
+    display: block;
+}
+
+#size{
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#size-label{
+    font-size: 16px;
+    font-weight: 600;
+}

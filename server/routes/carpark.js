@@ -13,4 +13,10 @@ router.get('/carpark', function(req, res, next) {
   })
 });
 
+router.get('/api', function(req, res, next) {
+  carparkApi.ListAPi((val, err) => {
+    helper.callback(res, val, err, 200)
+  })
+});
+
 module.exports = router;

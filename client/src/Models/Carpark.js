@@ -9,5 +9,14 @@ class Carpark extends Model {
             }
         })
     }
+    GetApi(callback) {
+        super.get(`/api`, null, (res,err) => {
+            if (res && res.success) {
+                callback(res.value,null)
+            } else {
+                callback(null,err || res.error)
+            }
+        })
+    }
 }
 export default Carpark;

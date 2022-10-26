@@ -4,12 +4,10 @@ import { Row, Container, Col } from 'react-bootstrap'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Carpark from '../Models/Carpark';
-import moment from 'moment';
 import './view.css'
 class View extends React.Component {
     constructor(props) {
         super(props)
-        this.interval = null
         this.carparkApi = new Carpark()
         this.state = {
             carpark : null,
@@ -24,42 +22,36 @@ class View extends React.Component {
         this.init()
     }
 
-    componentDidUpdate(){
-        clearInterval(this.interval)
-    }
-
     init = () => {
         if(this.state.carpark === null){
-            this.carparkApi.GetApi((carpark, err) => {
-                // console.log(carpark[0].carpark_data)
-                let data = carpark[0] ? carpark[0].carpark_data : null
-                this.setState({carpark : data, selected : err ? null : data[this.state.index]})
+            this.carparkApi.GetCarpark((carpark, err) => {
+                this.setState({carpark : carpark, selected : err ? null : carpark[this.state.index]})
             })
         }
-        this.interval = setInterval(() => {
+        setInterval(() => {
             var count = this.state.count
             var prevCount = this.state.prevCount
             var index = this.state.index
             if(count === prevCount){
                 return
             }
-            this.carparkApi.GetApi((carpark, err) => {
-                let data = carpark[0] ? carpark[0].carpark_data : null
+            this.carparkApi.GetCarpark((carpark, err) => {
                 if(err == null){
                     prevCount = count
                     index += 1
                     count += 1
-                    if(index >= data.length){
+                    if(index >= carpark.length){
                         index = 0
                     }
                     this.setState({
-                        carpark : data, 
-                        selected : err ? null : data[this.state.index], 
+                        carpark : carpark, 
+                        selected : err ? null : carpark[this.state.index], 
                         index : index, 
                         count : count,
                         prevCount : prevCount
                     })
                 }
+
             })
           }, 10000);
     }
@@ -84,50 +76,34 @@ class View extends React.Component {
                                 <Row>
                                     <Col>
                                         <label id="carpark-label">
-                                            Last Updated : {moment.utc(selected.update_datetime).local().format('DD/MM/YYYY HH:mm:ss')}
+                                            {selected.name}
                                         </label>
                                     </Col>
                                 </Row>
                                 <Row style={{marginTop:"20px"}}>
                                     <Col>
-                                        <label id="carpark-label">
-                                            Carpark Number : {selected.carpark_number}
-                                        </label>
+                                        <div id="size-wrapper">
+                                            <span id="size-label">
+                                                Minimum : 
+                                            </span>
+                                            {" "}
+                                            <span id="size">
+                                                {selected.min}
+                                            </span>
+                                        </div>
+                                        {selected.max !== -1 && (
+                                            <div id="size-wrapper">
+                                                <span id="size-label">
+                                                    Maximum : 
+                                                </span>
+                                                {" "}
+                                                <span id="size">
+                                                    {selected.max}
+                                                </span>
+                                            </div>
+                                        )}
                                     </Col>
                                 </Row>
-                                {selected.carpark_info.map((info, index) => (
-                                    <Row style={{marginTop:"20px"}} key={index}>
-                                        <Col>
-                                            <div id="size-wrapper">
-                                                <span id="size-label">
-                                                    Lot type : 
-                                                </span>
-                                                {" "}
-                                                <span id="size">
-                                                    {info.lot_type}
-                                                </span>
-                                            </div>
-                                            <div id="size-wrapper">
-                                                <span id="size-label">
-                                                    Lots available : 
-                                                </span>
-                                                {" "}
-                                                <span id="size">
-                                                    {info.lots_available}
-                                                </span>
-                                            </div>
-                                            <div id="size-wrapper">
-                                                <span id="size-label">
-                                                    Total lots : 
-                                                </span>
-                                                {" "}
-                                                <span id="size">
-                                                    {info.total_lots}
-                                                </span>
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                ))}
                             </CardContent>
                         </Card>
                     </Col>

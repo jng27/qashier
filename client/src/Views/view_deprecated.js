@@ -4,7 +4,7 @@ import { Row, Container, Col } from 'react-bootstrap'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Carpark from '../Models/Carpark';
-import './view.css'
+// import './view.css'
 class View extends React.Component {
     constructor(props) {
         super(props)

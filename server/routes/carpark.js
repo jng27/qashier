@@ -14,6 +14,8 @@ router.get('/carpark', function(req, res, next) {
 });
 
 router.get('/api', function(req, res, next) {
+  // console.log(req.query)
+  // var datetime = req.query.date_time
   carparkApi.ListAPi((val, err) => {
     helper.callback(res, val, err, 200)
   })
